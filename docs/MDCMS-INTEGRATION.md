@@ -1,45 +1,15 @@
-# MDCMS Integration
+### Added features in this update
 
-This branch adds a live MDCMS integration and a small preview UI for Neurodigest-Podcast. It includes:
+- Audio proxy endpoint: `GET /api/proxy-audio?url=...` to proxy audio files through your server. Use with caution — proxying audio increases bandwidth and may have cost implications. This is useful when source audio lacks permissive CORS headers and you need a waveform for it.
 
-- lib/mdcms.ts — server wrapper that calls your MDCMS instance (Authorization: Bearer MDCMS_API_KEY)
-- lib/markdownServer.ts — markdown -> sanitized HTML helpers (marked + dompurify + jsdom)
-- lib/firebaseAdmin.ts + lib/firebaseClient.ts — Firebase init for server/client
-- NextAuth route (app/api/auth/[...nextauth]/route.ts) — configured for Google provider (placeholders)
-- Favorites API (app/api/favorites/route.ts) — Firestore-backed endpoints (JWT sessions)
-- Episode page (app/episode/[slug]/page.tsx) — server component rendering show notes + audio waveform
-- Preview page (app/mdcms-preview/page.tsx) — lists episodes from MDCMS or sample data
-- components/PlayerWaveform.tsx — wavesurfer.js waveform + controls (client)
-- components/EpisodeCard.tsx, components/Player.tsx
-- data/mdcms-sample.json — sample data used when MDCMS env not provided
+  Example: `<audio src="/api/proxy-audio?url=${encodeURIComponent(audioUrl)}" controls />` or pass the proxied URL to the waveform player.
 
-.env.example
+- Comments API: `GET /api/comments?slug=...` and `POST /api/comments` (protected). Stores comments in Firestore under `comments` collection. Requires authentication to post.
 
-Copy this file to `.env.local` and fill in your values:
+- Favorite UI: `components/FavoriteButton.tsx` added and wired into `EpisodeCard`. This calls your existing `/api/favorites` endpoint.
 
-MDCMS_BASE_URL=https://api.mdcms.ai
-MDCMS_API_KEY=
+Notes & usage
 
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
+- The proxy endpoint does not currently enforce auth or rate-limiting. For production, add authentication, domain whitelisting, or signed URLs and consider using a CDN.
+- Waveform generation still requires the proxied response to have correct CORS behavior when using direct sources; using the proxy route should allow waveform generation because the request will be same-origin.
 
-FIREBASE_PROJECT_ID=
-FIREBASE_CLIENT_EMAIL=
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
-NEXT_PUBLIC_FIREBASE_API_KEY=
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
-
-Run locally:
-
-1. npm install
-2. cp .env.example .env.local and fill values (or leave MDCMS_API_KEY empty to use demo data)
-3. npm run dev
-4. Visit http://localhost:3000/mdcms-preview to preview episodes
-
-Notes:
-- Waveform generation requires CORS on audio sources. For non-CORS audio the player falls back to native audio controls.
-- Do not commit private keys. Store them as repo/host secrets in production.
