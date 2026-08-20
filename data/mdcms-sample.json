@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "slug": "sample-episode-1",
+    "title": "Sample Episode 1",
+    "excerpt": "An example episode used for local preview.",
+    "image": "/sample-art-1.jpg",
+    "publishedAt": "2024-01-01T12:00:00Z",
+    "content": "# Show notes\n\nThis is a sample episode used to preview the MDCMS integration.\n\n- Point one\n- Point two\n\n[External link](https://example.com)",
+    "enclosure": { "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", "type": "audio/mpeg" }
+  },
+  {
+    "id": "2",
+    "slug": "sample-episode-2",
+    "title": "Sample Episode 2",
+    "excerpt": "Another example episode.",
+    "image": "/sample-art-2.jpg",
+    "publishedAt": "2024-02-01T12:00:00Z",
+    "content": "This is another sample episode with some markdown content.",
+    "enclosure": { "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", "type": "audio/mpeg" }
+  }
+]
